@@ -46,11 +46,11 @@ class DBConnect:
     @classmethod
     def init_app_db_connect_string(cls):
         load_dotenv()
-        cls.db_url = "127.0.0.1"
+        cls.db_url = os.getenv("DB_HOST")
+        # cls.db_url = "172.17.0.1"
         cls.db_user = os.getenv("DB_USER")
         cls.db_pass = os.getenv("DB_PASS")
         cls.db_name = os.getenv("DB_NAME")
-        # print(cls.db_user,cls.db_pass,cls.db_name) 
 
     @classmethod
     def connect(cls):

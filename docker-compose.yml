@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask_web
+    ports:
+      - "5000:5000"
+    env_file:
+      - /app/.env
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    build:
+      context: ./mysql_config
+      dockerfile: Dockerfile
+    container_name: mysql_db
+    env_file:
+      - /app/.env
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql_config/data.sql:/docker-entrypoint-initdb.d/data.sql 
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
