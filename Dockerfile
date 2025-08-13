@@ -1,4 +1,4 @@
-FROM python:3-alpine3.11
+FROM birendramondal/daemon_monitor:backend_v1.0
 WORKDIR /app
 COPY . /app
 RUN pip install --upgrade pip
