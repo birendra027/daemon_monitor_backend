@@ -1,0 +1,22 @@
+apiVersion: v2
+name: daemon-monitor-backend
+description: A Helm chart for Daemon Monitor Backend Application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - flask
+  - mysql
+  - microservice
+  - monitoring
+home: https://github.com/birendra027/daemon_monitor_backend/
+sources:
+  - https://github.com/birendra027/daemon_monitor_backend/
+maintainers:
+  - name: Birendra Nath Mondal
+    email: birendra.mondal@example.com
+# dependencies:
+#   - name: mysql
+#     version: 9.4.0
+#     repository: https://charts.bitnami.com/bitnami
+#     condition: mysql.enabled

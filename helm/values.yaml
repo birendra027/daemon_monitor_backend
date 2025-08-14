@@ -1,0 +1,142 @@
+# Default values for daemon-monitor-backend
+# This is a YAML-formatted file.
+
+# Global configuration
+global:
+  environment: production
+
+# Application configuration
+app:
+  name: daemon-monitor-backend
+  replicaCount: 2
+  image:
+    repository: birendramondal/daemon_monitor
+    tag: "backend_v1.0"
+    pullPolicy: IfNotPresent
+  containerPort: 5000
+  servicePort: 80
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 5000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 5000
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  env:
+    FLASK_ENV: production
+    FLASK_DEBUG: "false"
+
+# Database configuration
+mysql:
+  enabled: true
+  auth:
+    rootPassword: "root-password"
+    database: "daemon_monitor"
+    username: "daemon_user"
+    password: "daemon_password"
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClass: ""
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    podAnnotations: {}
+    podLabels: {}
+    serviceAnnotations: {}
+    serviceLabels: {}
+    affinity: {}
+    nodeSelector: {}
+    tolerations: []
+    initContainers: []
+    sidecars: []
+  image:
+    repository: birendramondal/daemon_monitor
+    tag: "database_v1.0"
+    pullPolicy: IfNotPresent
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+# Service configuration
+service:
+  type: ClusterIP
+  annotations: {}
+
+# Persistence configuration
+persistence:
+  enabled: false
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+# ConfigMap and Secret configuration
+config:
+  # Database connection settings
+  dbHost: "mysql-primary"
+  dbPort: "3306"
+  dbName: "daemon_monitor"
+  
+  # Application settings
+  appSecret: "your-secret-key-here"
+  debugMode: "false"
+  
+  # MySQL configuration
+  mysqlConfig: |
+    [mysqld]
+    default-authentication-plugin=mysql_native_password
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci
+    
+    [mysql]
+    default-character-set=utf8mb4
+    
+    [client]
+    default-character-set=utf8mb4
+
+# Security context
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+# Pod security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+# Autoscaling configuration
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80

@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "daemon-monitor-backend.fullname" . }}-app
+  labels:
+    {{- include "daemon-monitor-backend.labels" . | nindent 4 }}
+    app.kubernetes.io/component: application
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "daemon-monitor-backend.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: application
+  template:
+    metadata:
+      labels:
+        {{- include "daemon-monitor-backend.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: application
+      annotations: {}
+    spec:
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-app
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.containerPort }}
+              protocol: TCP
+          env:
+            - name: FLASK_ENV
+              value: {{ .Values.app.env.FLASK_ENV | quote }}
+            - name: FLASK_DEBUG
+              value: {{ .Values.app.env.FLASK_DEBUG | quote }}
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "daemon-monitor-backend.fullname" . }}-config
+                  key: dbHost
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "daemon-monitor-backend.fullname" . }}-config
+                  key: dbPort
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "daemon-monitor-backend.fullname" . }}-config
+                  key: dbName
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "daemon-monitor-backend.fullname" . }}-secret
+                  key: dbUser
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "daemon-monitor-backend.fullname" . }}-secret
+                  key: dbPassword
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "daemon-monitor-backend.fullname" . }}-secret
+                  key: appSecret
+          {{- if .Values.app.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.app.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.app.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.app.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: app-config
+              mountPath: /app/config
+              readOnly: true
+      volumes:
+        - name: app-config
+          configMap:
+            name: {{ include "daemon-monitor-backend.fullname" . }}-config
