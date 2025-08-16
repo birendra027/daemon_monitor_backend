@@ -50,7 +50,8 @@ spec:
         
       volumes:
         - name: db-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: mysql-pvc
         - name: init-sql
           configMap:
             name: db-init-sql
