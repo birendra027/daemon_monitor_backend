@@ -1,12 +1,46 @@
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "daemon-monitor-backend.fullname" . }}-config
-  labels:
-    {{- include "daemon-monitor-backend.labels" . | nindent 4 }}
+  name: backend-env
 data:
-  dbHost: {{ .Values.config.dbHost | quote }}
-  dbPort: {{ .Values.config.dbPort | quote }}
-  dbName: {{ .Values.config.dbName | quote }}
-  debugMode: {{ .Values.config.debugMode | quote }}
-  mysqlConfig: "{{ .Values.config.mysqlConfig }}"
+  DB_USER: "root"
+  DB_HOST: "mysql-db"
+  DB_PASS: "4321"
+  DB_NAME: "daemon_monitor"
+  MYSQL_ROOT_PASSWORD: "4321"
+  MYSQL_DATABASE: "daemon_monitor"
+  MYSQL_USER: "birendra"
+  MYSQL_PASSWORD: "4321"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-sql
+data:
+  data.sql: |-
+    CREATE DATABASE IF NOT EXISTS daemon_monitor;
+
+    USE daemon_monitor;
+
+    CREATE TABLE IF NOT EXISTS DaemonDetails (
+      daemon_name varchar(255) DEFAULT NULL,
+      daemon_id varchar(255) DEFAULT NULL,
+      daemon_status varchar(255) DEFAULT NULL,
+      instance int DEFAULT NULL
+    );
+
+    INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('filetransfer','4','UP',1);
+    INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('rater','12','UP',5);
+    INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('rerater','14','UP',10);
+    INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('mlog','30','UP',1);
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-my-cnf
+data:
+  my.cnf: |-
+    # Paste your my.cnf content here
