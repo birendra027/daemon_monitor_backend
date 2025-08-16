@@ -6,12 +6,8 @@ metadata:
 data:
   DB_USER: "root"
   DB_HOST: "mysql-db"
-  DB_PASS: "4321"
   DB_NAME: "daemon_monitor"
-  MYSQL_ROOT_PASSWORD: "4321"
   MYSQL_DATABASE: "daemon_monitor"
-  MYSQL_USER: "birendra"
-  MYSQL_PASSWORD: "4321"
 
 ---
 apiVersion: v1
@@ -53,7 +49,7 @@ data:
     secure-file-priv=/var/lib/mysql-files
     user=mysql
     pid-file=/var/run/mysqld/mysqld.pid
-    
+
     [client]
     socket=/var/run/mysqld/mysqld.sock
     !includedir /etc/mysql/conf.d/

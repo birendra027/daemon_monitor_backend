@@ -20,8 +20,8 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: backend-env
+                secretKeyRef:
+                  name: backend-secret
                   key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_DATABASE
               valueFrom:
@@ -30,13 +30,13 @@ spec:
                   key: MYSQL_DATABASE
             - name: MYSQL_USER
               valueFrom:
-                configMapKeyRef:
-                  name: backend-env
+                secretKeyRef:
+                  name: backend-secret
                   key: MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: backend-env
+                secretKeyRef:
+                  name: backend-secret
                   key: MYSQL_PASSWORD
           volumeMounts:
             - name: db-data
