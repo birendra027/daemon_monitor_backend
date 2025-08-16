@@ -4,12 +4,12 @@ metadata:
   name: mysql-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: {{ .Values.database.storage.size }}
   accessModes:
     - ReadWriteOnce
-  storageClassName: mysql-local-storage
+  storageClassName: {{ .Values.database.storage.storageClassName }}
   hostPath:
-    path: /c/Users/BIRENDRA NATH MONDAL/Documents/Pesonal Projects/Microservices/pvc_data
+    path: {{ .Values.database.storage.path | quote }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,6 +20,6 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.database.storage.size }}
   volumeName: mysql-pv
-  storageClassName: mysql-local-storage
+  storageClassName: {{ .Values.database.storage.storageClassName }}

@@ -3,7 +3,28 @@ database:
   port: 3306
   dataSql: data.sql
   myCnf: my.cnf
+  replicaCount: 1
+  storage:
+    size: 1Gi
+    path: /c/Users/BIRENDRA NATH MONDAL/Documents/Pesonal Projects/Microservices/pvc_data
+    storageClassName: mysql-local-storage
+  credentials:
+    rootPassword: "4321"
+    user: "birendra"
+    password: "4321"
+    dbName: "daemon_monitor"
+  service:
+    type: ClusterIP
+    port: 3306
 
 backend:
   image: birendramondal/daemon_monitor:backend_v1.0
   port: 5000
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 5000
+  env:
+    dbUser: "root"
+    dbHost: "mysql-db"
+    dbName: "daemon_monitor"

@@ -4,10 +4,10 @@ kind: ConfigMap
 metadata:
   name: backend-env
 data:
-  DB_USER: "root"
-  DB_HOST: "mysql-db"
-  DB_NAME: "daemon_monitor"
-  MYSQL_DATABASE: "daemon_monitor"
+  DB_USER: {{ .Values.backend.env.dbUser | quote }}
+  DB_HOST: {{ .Values.backend.env.dbHost | quote }}
+  DB_NAME: {{ .Values.backend.env.dbName | quote }}
+  MYSQL_DATABASE: {{ .Values.database.credentials.dbName | quote }}
 
 ---
 apiVersion: v1

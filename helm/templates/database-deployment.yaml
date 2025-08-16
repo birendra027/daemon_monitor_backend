@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mysql-db
 spec:
-  replicas: 1
+  replicas: {{ .Values.database.replicaCount }}
   selector:
     matchLabels:
       app: mysql-db
@@ -65,10 +65,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql-db
+  labels:
+    app: mysql-db
 spec:
-  type: ClusterIP
+  type: {{ .Values.database.service.type }}
   ports:
-    - port: 3306
-      targetPort: 3306
+    - port: {{ .Values.database.service.port }}
+      targetPort: {{ .Values.database.port }}
   selector:
     app: mysql-db
