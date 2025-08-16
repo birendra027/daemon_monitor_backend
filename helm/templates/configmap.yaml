@@ -35,6 +35,7 @@ data:
     INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('rater','12','UP',5);
     INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('rerater','14','UP',10);
     INSERT INTO DaemonDetails (daemon_name, daemon_id, daemon_status, instance) VALUES ('mlog','30','UP',1);
+    
 
 ---
 apiVersion: v1
@@ -43,4 +44,16 @@ metadata:
   name: db-my-cnf
 data:
   my.cnf: |-
-    # Paste your my.cnf content here
+    [mysqld]
+    default-authentication-plugin=mysql_native_password
+    skip-host-cache
+    skip-name-resolve
+    datadir=/var/lib/mysql
+    socket=/var/run/mysqld/mysqld.sock
+    secure-file-priv=/var/lib/mysql-files
+    user=mysql
+    pid-file=/var/run/mysqld/mysqld.pid
+    
+    [client]
+    socket=/var/run/mysqld/mysqld.sock
+    !includedir /etc/mysql/conf.d/

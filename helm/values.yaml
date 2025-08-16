@@ -1,9 +1,9 @@
-backend:
-  image: birendramondal/daemon_monitor:backend_v1.0
-  port: 5000
-
 database:
   image: birendramondal/daemon_monitor:database_v1.0
   port: 3306
   dataSql: data.sql
   myCnf: my.cnf
+
+backend:
+  image: birendramondal/daemon_monitor:backend_v1.0
+  port: 5000

@@ -21,3 +21,16 @@ spec:
             - configMapRef:
                 name: backend-env
 
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    app: flask-backend
