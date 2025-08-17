@@ -1,4 +1,5 @@
 # Daemon_Monitor_enhance
+Run it locally: 
 
 1. Activate environment **"daemonEnv"**
    source daemonEnv/bin/activate
@@ -20,3 +21,11 @@
 
 5. to activate front-end 
    https://github.com/birendramondal/Frontend_Daemon_Monitor
+
+
+Run it in k8s cluster default ns: 
+
+1. To run the app using helm chart 
+  i.  helm install daemon-monitor ./helm  --wait --timeout 10m
+  ii. kubectl port-forward service/flask-backend 5000:5000 
+  iii. http://localhost:5000/api/show
